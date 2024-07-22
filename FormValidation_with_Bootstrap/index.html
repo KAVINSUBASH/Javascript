@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            /* border-width: 5px; */
+        }
+
+        input:focus {
+            border-color: #007BFF;
+        }
+
+        input.error {
+            border-color: red;
+        }
+
+        small {
+            color: red;
+            display: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Basic Form Validation</h2>
+        <form id="validationForm">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName">
+                <small>Error message</small>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName">
+                <small>Error message</small>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email">
+                <small>Error message</small>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone (India)</label>
+                <input type="text" id="phone" name="phone">
+                <small>Error message</small>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('validationForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const firstName = document.getElementById('firstName');
+            const lastName = document.getElementById('lastName');
+            const email = document.getElementById('email');
+            const phone = document.getElementById('phone');
+
+            validateInput(firstName, /^[A-Za-z\s]+$/);
+            validateInput(lastName, /^[A-Za-z\s]+$/);
+            validateEmail(email);
+            validatePhone(phone);
+        });
+
+        function validateInput(input, regex) {
+            if (input.value.trim() === '' || !regex.test(input.value)) {
+                setError(input);
+            } else {
+                setSuccess(input);
+            }
+        }
+
+        function validateEmail(input) {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (input.value.trim() === '' || !emailPattern.test(input.value)) {
+                setError(input);
+            } else {
+                setSuccess(input);
+            }
+        }
+
+        function validatePhone(input) {
+            const phonePattern = /^[6-9]\d{9}$/;
+            if (input.value.trim() === '' || !phonePattern.test(input.value)) {
+                setError(input);
+            } else {
+                setSuccess(input);
+            }
+        }
+
+        function setError(input) {
+            input.classList.add('error');
+            input.nextElementSibling.style.display = 'block';
+            input.nextElementSibling.textContent = 'Invalid input';
+        }
+
+        function setSuccess(input) {
+            input.classList.remove('error');
+            input.nextElementSibling.style.display = 'none';
+        }
+
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', function () {
+                const regex = input.name === 'email' ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/ : input.name === 'phone' ? /^[6-9]\d{9}$/ : /^[A-Za-z]+$/;
+                validateInput(input, regex);
+            });
+        });
+    </script>
+</body>
+</html>
